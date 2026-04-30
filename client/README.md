@@ -40,7 +40,7 @@ npm run preview  # Preview the production build locally
 ## Features
 
 - **View TODOs** — Listed newest first, with All / Active / Done filter tabs
-- **Create TODO** — Form with title (required) and description (optional), with character limits and inline validation
+- **Create TODO** — Form with title  (required) and description (optional), with character limits and inline validation
 - **Edit TODO** — Click the edit icon on any task to edit inline; Ctrl+Enter to save, Esc to cancel
 - **Toggle done** — Click the checkbox to mark as done/undone; completed tasks show with strikethrough
 - **Delete TODO** — Click the trash icon to remove a task
