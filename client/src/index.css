@@ -29,6 +29,27 @@
   --transition: 200ms ease;
 }
 
+/* Dark mode */
+[data-theme="dark"] {
+  --bg: #0f0e0b;
+  --surface: #1a1916;
+  --surface-hover: #252420;
+  --border: #3d3935;
+  --border-strong: #5a544a;
+  --text-primary: #f5f3ef;
+  --text-secondary: #c9c4ba;
+  --text-muted: #8f8b83;
+  --accent: #7ca876;
+  --accent-light: #243421;
+  --accent-hover: #95b591;
+  --danger: #f08080;
+  --danger-light: #3d2625;
+  --done-text: #8f8b83;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3);
+}
+
 html, body {
   height: 100%;
 }
@@ -39,6 +60,7 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition), color var(--transition);
 }
 
 #root {
@@ -79,6 +101,21 @@ input, textarea {
 }
 
 @keyframes shimmer {
-  0%   { background-position: -200% 0; }a
+  0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }
