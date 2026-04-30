@@ -4,6 +4,7 @@ import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 import ErrorBanner from './components/ErrorBanner';
 import Skeleton from './components/Skeleton';
+import ProgressBar from './components/ProgressBar';
 import { Moon, Sun } from 'lucide-react';
 import { motion } from 'framer-motion';
 import styles from './App.module.css';
@@ -13,6 +14,37 @@ export default function App() {
   const { theme, toggleTheme } = useTheme();
 
   const pending = todos.filter((t) => !t.done).length;
+  const total = todos.length;
+  const completed = total - pending;
+
+  const notify = async (title, body) => {
+    if (!('Notification' in window)) return;
+    
+    if (Notification.permission === 'granted') {
+      new Notification(title, { body });
+    } else if (Notification.permission !== 'denied') {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        new Notification(title, { body });
+      }
+    }
+  };
+
+  const handleCreateTodo = async (title, description) => {
+    await createTodo(title, description);
+    notify('Task Added', title);
+  };
+
+  const handleUpdateTodo = async (id, title, description) => {
+    await updateTodo(id, title, description);
+    notify('Task Updated', title);
+  };
+
+  const handleDeleteTodo = async (id) => {
+    if (window.confirm('Do you really want to delete this task?')) {
+      await deleteTodo(id);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -45,7 +77,7 @@ export default function App() {
         <div className={styles.headerInner}>
           <div className={styles.brand}>
             <span className={styles.brandMark}>✦</span>
-            <h1 className={styles.brandName}>Taskboard</h1>
+            <h1 className={styles.brandName}>TODO</h1>
           </div>
           <div className={styles.headerRight}>
             {!loading && (
@@ -56,7 +88,7 @@ export default function App() {
                 transition={{ delay: 0.3 }}
               >
                 {pending === 0
-                  ? 'All done! 🎉'
+                  ? 'All done! '
                   : `${pending} task${pending !== 1 ? 's' : ''} remaining`}
               </motion.p>
             )}
@@ -103,8 +135,14 @@ export default function App() {
           <ErrorBanner message={error} onDismiss={clearError} />
         </motion.div>
         
+        {!loading && (
+          <motion.div variants={itemVariants}>
+            <ProgressBar completed={completed} total={total} />
+          </motion.div>
+        )}
+        
         <motion.div variants={itemVariants}>
-          <TodoForm onSubmit={createTodo} />
+          <TodoForm onSubmit={handleCreateTodo} />
         </motion.div>
 
         <motion.div variants={itemVariants}>
@@ -114,8 +152,8 @@ export default function App() {
             <TodoList
               todos={todos}
               onToggle={toggleDone}
-              onUpdate={updateTodo}
-              onDelete={deleteTodo}
+              onUpdate={handleUpdateTodo}
+              onDelete={handleDeleteTodo}
             />
           )}
         </motion.div>
