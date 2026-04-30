@@ -11,6 +11,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 4px;
+  transition: background-color var(--transition), border-color var(--transition);
 }
 
 .filterBtn {

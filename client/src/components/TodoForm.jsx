@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import styles from './TodoForm.module.css';
 
 export default function TodoForm({ onSubmit }) {
@@ -33,13 +34,42 @@ export default function TodoForm({ onSubmit }) {
     }
   };
 
-  return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      <h2 className={styles.formTitle}>Add a new task</h2>
+  const fieldVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, duration: 0.4 },
+    }),
+  };
 
-      <div className={styles.field}>
+  return (
+    <motion.form 
+      className={styles.form} 
+      onSubmit={handleSubmit} 
+      noValidate
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.h2 
+        className={styles.formTitle}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        Add a new task
+      </motion.h2>
+
+      <motion.div 
+        className={styles.field}
+        custom={0}
+        variants={fieldVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <label htmlFor="title" className={styles.label}>Title <span className={styles.required}>*</span></label>
-        <input
+        <motion.input
           id="title"
           type="text"
           className={`${styles.input} ${errors.title ? styles.inputError : ''}`}
@@ -48,14 +78,31 @@ export default function TodoForm({ onSubmit }) {
           onChange={(e) => { setTitle(e.target.value); setErrors((p) => ({ ...p, title: '' })); }}
           maxLength={200}
           disabled={submitting}
+          whileFocus={{ scale: 1.02 }}
+          transition={{ type: 'spring', stiffness: 300 }}
         />
-        {errors.title && <span className={styles.errorMsg}>{errors.title}</span>}
+        {errors.title && (
+          <motion.span 
+            className={styles.errorMsg}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {errors.title}
+          </motion.span>
+        )}
         <span className={styles.charCount}>{title.length}/200</span>
-      </div>
+      </motion.div>
 
-      <div className={styles.field}>
+      <motion.div 
+        className={styles.field}
+        custom={1}
+        variants={fieldVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <label htmlFor="description" className={styles.label}>Description <span className={styles.optional}>(optional)</span></label>
-        <textarea
+        <motion.textarea
           id="description"
           className={`${styles.textarea} ${errors.description ? styles.inputError : ''}`}
           placeholder="Add more details..."
@@ -64,15 +111,36 @@ export default function TodoForm({ onSubmit }) {
           maxLength={1000}
           rows={3}
           disabled={submitting}
+          whileFocus={{ scale: 1.02 }}
+          transition={{ type: 'spring', stiffness: 300 }}
         />
-        {errors.description && <span className={styles.errorMsg}>{errors.description}</span>}
+        {errors.description && (
+          <motion.span 
+            className={styles.errorMsg}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {errors.description}
+          </motion.span>
+        )}
         <span className={styles.charCount}>{description.length}/1000</span>
-      </div>
+      </motion.div>
 
-      <button type="submit" className={styles.submitBtn} disabled={submitting}>
+      <motion.button 
+        type="submit" 
+        className={styles.submitBtn} 
+        disabled={submitting}
+        custom={2}
+        variants={fieldVariants}
+        initial="hidden"
+        animate="visible"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
         {submitting ? <span className={styles.spinner} /> : null}
         {submitting ? 'Adding…' : 'Add Task'}
-      </button>
-    </form>
+      </motion.button>
+    </motion.form>
   );
 }
