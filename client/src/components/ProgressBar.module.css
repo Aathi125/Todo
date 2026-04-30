@@ -1,0 +1,43 @@
+.progressContainer {
+  margin-top: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progressTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.progressText {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.progressBarTrack {
+  height: 8px;
+  background: var(--surface-hover);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}

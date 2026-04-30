@@ -1,0 +1,84 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px;
+  transition: background-color var(--transition), border-color var(--transition);
+}
+
+.filterBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all var(--transition);
+}
+
+.filterBtn:hover { background: var(--surface-hover); color: var(--text-primary); }
+
+.filterBtn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+}
+
+.filterBtn:not(.active) .badge {
+  background: var(--surface-hover);
+  color: var(--text-muted);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 24px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius);
+  animation: fadeIn 300ms ease;
+}
+
+.emptyIcon {
+  font-size: 1.8rem;
+  color: var(--text-muted);
+}
+
+.empty p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+}
