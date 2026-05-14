@@ -1,146 +1,135 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import styles from './TodoForm.module.css';
+import { useState } from "react";
+import styles from "./TodoForm.module.css";
 
 export default function TodoForm({ onSubmit }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
   const validate = () => {
-    const e = {};
-    if (!title.trim()) e.title = 'Title is required';
-    else if (title.trim().length > 200) e.title = 'Title must be under 200 characters';
-    if (description.length > 1000) e.description = 'Description must be under 1000 characters';
-    return e;
+    let newErrors = {};
+
+    if (!title.trim()) {
+      newErrors.title = "Title is required";
+    } else if (title.trim().length > 200) {
+      newErrors.title = "Title must be under 200 characters";
+    }
+
+    if (description.length > 1000) {
+      newErrors.description = "Description must be under 1000 characters";
+    }
+
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     setSubmitting(true);
+
     try {
       await onSubmit(title.trim(), description.trim());
-      setTitle('');
-      setDescription('');
+
+      setTitle("");
+      setDescription("");
       setErrors({});
-    } catch {
-      // error handled by hook
+    } catch (error) {
+      console.log(error);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const fieldVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1, duration: 0.4 },
-    }),
-  };
-
   return (
-    <motion.form 
-      className={styles.form} 
-      onSubmit={handleSubmit} 
-      noValidate
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.h2 
-        className={styles.formTitle}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        Add a new task
-      </motion.h2>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
+      
+      <h2 className={styles.formTitle}>Add a new task</h2>
 
-      <motion.div 
-        className={styles.field}
-        custom={0}
-        variants={fieldVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <label htmlFor="title" className={styles.label}>Title <span className={styles.required}>*</span></label>
-        <motion.input
+      {/* Title */}
+      <div className={styles.field}>
+        <label htmlFor="title" className={styles.label}>
+          Title <span className={styles.required}>*</span>
+        </label>
+
+        <input
           id="title"
           type="text"
-          className={`${styles.input} ${errors.title ? styles.inputError : ''}`}
+          className={`${styles.input} ${
+            errors.title ? styles.inputError : ""
+          }`}
           placeholder="What needs to be done?"
           value={title}
-          onChange={(e) => { setTitle(e.target.value); setErrors((p) => ({ ...p, title: '' })); }}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setErrors({ ...errors, title: "" });
+          }}
           maxLength={200}
           disabled={submitting}
-          whileFocus={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 300 }}
         />
-        {errors.title && (
-          <motion.span 
-            className={styles.errorMsg}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {errors.title}
-          </motion.span>
-        )}
-        <span className={styles.charCount}>{title.length}/200</span>
-      </motion.div>
 
-      <motion.div 
-        className={styles.field}
-        custom={1}
-        variants={fieldVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <label htmlFor="description" className={styles.label}>Description <span className={styles.optional}>(optional)</span></label>
-        <motion.textarea
+        {errors.title && (
+          <span className={styles.errorMsg}>
+            {errors.title}
+          </span>
+        )}
+
+        <span className={styles.charCount}>
+          {title.length}/200
+        </span>
+      </div>
+
+      {/* Description */}
+      <div className={styles.field}>
+        <label htmlFor="description" className={styles.label}>
+          Description{" "}
+          <span className={styles.optional}>
+            (optional)
+          </span>
+        </label>
+
+        <textarea
           id="description"
-          className={`${styles.textarea} ${errors.description ? styles.inputError : ''}`}
+          className={`${styles.textarea} ${
+            errors.description ? styles.inputError : ""
+          }`}
           placeholder="Add more details..."
           value={description}
-          onChange={(e) => { setDescription(e.target.value); setErrors((p) => ({ ...p, description: '' })); }}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setErrors({ ...errors, description: "" });
+          }}
           maxLength={1000}
           rows={3}
           disabled={submitting}
-          whileFocus={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 300 }}
         />
-        {errors.description && (
-          <motion.span 
-            className={styles.errorMsg}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {errors.description}
-          </motion.span>
-        )}
-        <span className={styles.charCount}>{description.length}/1000</span>
-      </motion.div>
 
-      <motion.button 
-        type="submit" 
-        className={styles.submitBtn} 
+        {errors.description && (
+          <span className={styles.errorMsg}>
+            {errors.description}
+          </span>
+        )}
+
+        <span className={styles.charCount}>
+          {description.length}/1000
+        </span>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className={styles.submitBtn}
         disabled={submitting}
-        custom={2}
-        variants={fieldVariants}
-        initial="hidden"
-        animate="visible"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
       >
-        {submitting ? <span className={styles.spinner} /> : null}
-        {submitting ? 'Adding…' : 'Add Task'}
-      </motion.button>
-    </motion.form>
+        {submitting ? "Adding..." : "Add Task"}
+      </button>
+    </form>
   );
 }
